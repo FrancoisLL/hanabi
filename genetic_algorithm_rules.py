@@ -29,6 +29,7 @@ def create_population(games_number):
     
     return genomes
 
+
 # select the best games (future parents)
 def select_parents(genomes, players_number, repetitions):
     scores = [0] * len(genomes)
@@ -47,6 +48,7 @@ def select_parents(genomes, players_number, repetitions):
     parents_genomes = genomes[np.argpartition(scores, int(-len(genomes)/2))[int(-len(genomes)/2):]]
 
     return parents_genomes
+
 
 # generate children from parents
 def generate_children(parents_genomes, children_number):
@@ -76,15 +78,15 @@ def generate_children(parents_genomes, children_number):
     
     children_genomes = children_genomes.astype(int)
     
-    # add parents_genomes
+    # add parents_genomes (in case the children are not better)
     children_genomes = np.concatenate((children_genomes, parents_genomes))
     np.random.shuffle(children_genomes)
         
     return children_genomes
-        
+
+
 # evaluate a generation of players
 def evaluate_generation(genomes, players_number, repetitions):
-
     generation_score = 0
     for i in range(len(genomes)):
         for n in range(repetitions):
@@ -96,15 +98,16 @@ def evaluate_generation(genomes, players_number, repetitions):
     
     return generation_score
 
+
 def genetic_algorithm(players_number, games_number, repetitions, children_number, generations_number):
-#    genomes = create_population(games_number)
-    genomes = np.zeros(shape = (games_number, 20)).astype(int)
-    for i in range(len(genomes)):
-        genomes[i] = list(range(1, 21))
-        for n in range(5):
-            gene_1 = choice(range(20))
-            gene_2 = choice(range(20))
-            genomes[i][gene_1], genomes[i][gene_2] = genomes[i][gene_2], genomes[i][gene_1]
+    genomes = create_population(games_number)
+#    genomes = np.zeros(shape = (games_number, 20)).astype(int)
+#    for i in range(len(genomes)):
+#        genomes[i] = list(range(1, 21))
+#        for n in range(5):
+#            gene_1 = choice(range(20))
+#            gene_2 = choice(range(20))
+#            genomes[i][gene_1], genomes[i][gene_2] = genomes[i][gene_2], genomes[i][gene_1]
     
     generation_score = evaluate_generation(genomes, players_number, repetitions)
     scores = [generation_score]
@@ -114,8 +117,11 @@ def genetic_algorithm(players_number, games_number, repetitions, children_number
         parents_genomes = select_parents(genomes, players_number, repetitions)
         children_genomes = generate_children(parents_genomes, children_number)
         generation_score = evaluate_generation(children_genomes, players_number, repetitions)
-        scores += [generation_score]
-        print("score generation", n + 1 , ":", generation_score)
+        if generation_score > scores[len(scores) - 1]:
+            scores += [generation_score]
+            print("score generation", n + 1 , ":", generation_score)
+        else:
+            children_genomes = parents_genomes
 
     last_generation_genomes = children_genomes
     print("last_generation_genomes :")

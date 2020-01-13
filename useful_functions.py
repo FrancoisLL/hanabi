@@ -5,6 +5,7 @@ Created on Thu Nov 28 08:57:59 2019
 @author: flelay
 """
 
+# return the best information type regarding the deck and the given card
 def info_to_give(d, input_card):
     other_cards = list(filter(lambda x: x not in [input_card], d))
     
@@ -13,7 +14,7 @@ def info_to_give(d, input_card):
     
     for c in other_cards:            
         if (c.color == input_card.color) and (c.color_info == ""):
-                same_color_cards = True
+            same_color_cards = True
         
         if (c.value == input_card.value) and (c.value_info == 10):
             same_value_cards = True
@@ -24,6 +25,26 @@ def info_to_give(d, input_card):
         return 'value'
     else:
         return 'color'
+
+
+# return True if there is not any other card in the deck with the same value or color
+def same_value_or_color_cards(d, input_card):
+    other_cards = list(filter(lambda x: x not in [input_card], d))
+    
+    same_color_cards = False
+    same_value_cards = False
+    
+    for c in other_cards:            
+        if (c.color == input_card.color) and (c.color_info == ""):
+            same_color_cards = True
+        
+        if (c.value == input_card.value) and (c.value_info == 10):
+            same_value_cards = True
+        
+    if same_color_cards or same_value_cards:
+        return True
+    else:
+        return False
 
 
 # return True if the player received an information about this card
@@ -57,6 +78,26 @@ def unseen_information(g, player_info, card_info, info_type):
     return True
 
 
+# return True if the player has already too much information about his deck (on 2 cards or more)
+def too_much_information(d):
+    informed_cards_counter = 0
+    
+    for c in d:
+        if (c.value_info != 10) or (c.color_info != ""):
+            informed_cards_counter += 1
+
+    return (informed_cards_counter >= 3)
+
+
+# return True if the player has an information about a card on the left of the input card (with its value - 1)
+def info_on_the_left(d, input_card):
+    for c in d:
+        if (c.value_info != 10) or (c.color_info != ""):
+            return True
+        if (c.value == input_card.value - 1) and (c.color == input_card.color):
+            return False
+
+
 # return the value to announce to a player who has several playable cards with the same value, or 0 if not
 # return 0 if the 2 cards are of the same color
 def several_playable_cards(g, player_info_deck):
@@ -82,6 +123,18 @@ def several_playable_cards(g, player_info_deck):
             return value
 
     return 0
+
+
+# return True if the player has twice the card in parameter in his/her deck
+# AND if both cards have not any information (works also with 3 identical cards)
+def duplicated_card(g, player_deck, card):
+    other_cards = list(filter(lambda x: x not in [card], player_deck))
+    
+    for c in other_cards:
+        if (c.value == card.value) and (c.color == card.color):
+            return True
+        
+    return False
 
 
 # return True if the color can not be completed any more (considering the discard pile)

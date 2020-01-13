@@ -88,7 +88,7 @@ class game:
         print("|", end = "")
         for c in self.draw_pile:
             print(c, "|", sep = "", end = "")
-        return("")
+        return("")  
     
     def deal_cards(self, players_number, dna = list(range(1, 21))):
         for i in range(players_number):
@@ -100,8 +100,8 @@ class game:
 def create_draw_pile():
     
     draw_pile = []
-    card_list_per_colour = [1, 1, 1, 2, 2 ,3, 3, 4, 4, 5]
-    
+    card_list_per_colour = [1, 1, 1, 2, 2 ,3, 3, 4, 4, 5]     
+        
     for i in card_list_per_colour:
         draw_pile.append(card("blue", i))
     

@@ -11,7 +11,7 @@ from statistics import median
 from time import time
 
 from classes import game
-from choices_by_rules import launch_game
+from choices_by_rules import launch_game, saved_launch_game
 from create_data_for_neural_network import data_creation
 from choices_neural_network import nn_model, rf_model, launch_game_nn
 from genetic_algorithm_rules import launch_game_genetic, genetic_algorithm
@@ -24,21 +24,46 @@ players_number = 5
 
 ########## launch several games to measure accuracy ###########################
 
-#games_number = 1000
-#res = []
-#games_lost = []
-#for i in range(games_number):
-#    g, score, lost = launch_game(players_number, display = False)
-#    res.append(score)
-#    games_lost.append(lost)
+games_number = 10000
+res = []
+games_lost = []
+for i in range(games_number):
+    g, score, lost = launch_game(players_number, display = False)
+    res.append(score)
+    games_lost.append(lost)
+
+print("max score :", max(res))
+print("min score :", min(res))
+print("mean score :", np.mean(res))
+print("median score :", median(res))
+print("standard deviation :", np.std(res))
+print("games lost :", 100 * sum(games_lost) / games_number, "%")
+plt.hist(res)
+
+
+########## launch games until a given score ###################################
+
+#score = 10
+#games_counter = 0
+#while score > 4:
+#    games_counter += 1
+#    data_game, first_player, score, lost = saved_launch_game(players_number, display = False)
 #
-#print("max score :", max(res))
-#print("min score :", min(res))
-#print("mean score :", np.mean(res))
-#print("median score :", median(res))
-#print("standard deviation :", np.std(res))
-#print("games lost :", 100 * sum(games_lost) / games_number, "%")
-#plt.hist(res)
+#print(data_game[0])
+#turn_number = 0
+#current_player = first_player
+#print("turn number :", turn_number)
+#print("first player :", current_player)
+#print("__________________________________________________________")
+#for g in data_game:
+#    turn_number += 1
+#    print(g)
+#    print("")
+#    print("turn number :", turn_number)
+#    print("current_player :", current_player)
+#    print("__________________________________________________________")
+#    current_player = (current_player + 1) % players_number
+
 
 ########## create a large dataset for the neural network ######################
 
@@ -79,7 +104,7 @@ players_number = 5
 
 ########## launch several genetic games to measure accuracy ###################
 
-#games_number = 100
+#games_number = 1000
 #res = []
 #games_lost = []
 #for i in range(games_number):
@@ -99,12 +124,12 @@ players_number = 5
 
 ########## genetic algorithm ##################################################
 
-games_number = 100
-repetitions = 20
-children_number = int(games_number / 2)
-generations_number = 30
-
-scores, last_generation_genomes = genetic_algorithm(players_number, games_number, repetitions, children_number, generations_number)
+#games_number = 100
+#repetitions = 10
+#children_number = int(games_number / 2)
+#generations_number = 100
+#
+#scores, last_generation_genomes = genetic_algorithm(players_number, games_number, repetitions, children_number, generations_number)
 
 
 
