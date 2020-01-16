@@ -239,13 +239,6 @@ def simple_rules(g, p):
                     give_info(g, next_player, 'color', c.color)
                     return
     
-    # try to put a random card if the game is almost done and there are still error tokens
-    if (len(g.draw_pile) < 4) and g.error_tokens >= 2:
-        for c in p.deck:
-            if (c.color_info == "") and (c.value_info == 10):
-                play_card(g, p, c)
-                return
-    
     # complete the information about an unplayable informed card
     if g.info_tokens >= 1:
         for next_turn in [1, 2]:
@@ -343,6 +336,13 @@ def simple_rules(g, p):
                     give_info(g, next_player, 'value', c.value)
                     return
                     
+    # try to put a random card if the game is almost done and there are still error tokens
+    if (len(g.draw_pile) < 4) and g.error_tokens >= 2:
+        for c in p.deck:
+            if (c.color_info == "") and (c.value_info == 10):
+                play_card(g, p, c)
+                return            
+                
     # throw a random card (not a known useful "5") if no information about the deck
     if g.info_tokens < 8:
         for c in p.deck:
@@ -409,7 +409,7 @@ def launch_game(players_number, display):
     else:
         lost = False
     
-    return g, sum(g.fireworks.values()), lost
+    return g, sum(g.fireworks.values()), lost, g.error_tokens
 
     
 # game main function with a save at each turn

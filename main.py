@@ -26,10 +26,12 @@ players_number = 5
 
 games_number = 10000
 res = []
+res_error_tokens = []
 games_lost = []
 for i in range(games_number):
-    g, score, lost = launch_game(players_number, display = False)
+    g, score, lost, error_tokens = launch_game(players_number, display = False)
     res.append(score)
+    res_error_tokens.append(error_tokens)
     games_lost.append(lost)
 
 print("max score :", max(res))
@@ -39,6 +41,8 @@ print("median score :", median(res))
 print("standard deviation :", np.std(res))
 print("games lost :", 100 * sum(games_lost) / games_number, "%")
 plt.hist(res)
+#print("error tokens at the end of the game :")
+#plt.hist(res_error_tokens)
 
 
 ########## launch games until a given score ###################################
